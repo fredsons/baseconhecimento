@@ -1,0 +1,5 @@
+Django>=5.2,<5.3
+django-q2>=1.7,<2
+pypdf>=5,<7
+gunicorn>=23,<24; sys_platform != "win32"
+waitress>=3,<4; sys_platform == "win32"

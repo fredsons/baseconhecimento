@@ -1,0 +1,2 @@
+-r requirements.txt
+ocrmypdf>=17.14,<18

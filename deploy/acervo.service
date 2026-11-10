@@ -1,0 +1,17 @@
+[Unit]
+Description=Acervo web
+After=network.target
+[Service]
+User=acervo
+Group=www-data
+WorkingDirectory=/opt/acervo
+EnvironmentFile=/etc/acervo.env
+ExecStart=/opt/acervo/.venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8000 --workers 1 --threads 4 --timeout 120
+Restart=on-failure
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/acervo
+[Install]
+WantedBy=multi-user.target

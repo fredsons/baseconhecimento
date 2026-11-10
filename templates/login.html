@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<section class="login"><h1>Entrar no Acervo</h1><p>Entre com sua conta corporativa para consultar a biblioteca.</p><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="btn btn-primary">Entrar</button></form></section>{% endblock %}

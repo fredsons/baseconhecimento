@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Administração · Acervo{% endblock %}
+{% block content %}
+<div class="panel-heading"><div><h1>Administração</h1><p>Organize o acervo e os acessos da sua equipe.</p></div><a class="btn btn-primary" href="{% url 'upload' %}">Enviar artigo</a></div>
+<div class="panel-layout"><aside class="panel-nav" aria-label="Navegação administrativa">
+<a href="{% url 'panel' %}" {% if request.path == '/painel/' %}aria-current="page"{% endif %}>Visão geral</a><a href="{% url 'panel_articles' %}" {% if '/painel/artigos/' in request.path %}aria-current="page"{% endif %}>Artigos e revisões</a><a href="{% url 'panel_categories' %}" {% if '/painel/categorias/' in request.path %}aria-current="page"{% endif %}>Categorias e permissões</a>
+{% if can_users %}<a href="{% url 'panel_users' %}" {% if '/painel/usuarios/' in request.path %}aria-current="page"{% endif %}>Usuários</a>{% endif %}{% if can_groups %}<a href="{% url 'panel_groups' %}" {% if '/painel/grupos/' in request.path %}aria-current="page"{% endif %}>Grupos e departamentos</a>{% endif %}{% if can_tags %}<a href="{% url 'panel_tags' %}" {% if '/painel/tags/' in request.path %}aria-current="page"{% endif %}>Tags</a>{% endif %}
+{% if user.is_superuser %}<a href="{% url 'metrics' %}" {% if request.path == '/metricas/' %}aria-current="page"{% endif %}>Métricas e feedback</a>{% endif %}
+<a href="{% url 'panel_processing' %}" {% if '/painel/processamento/' in request.path %}aria-current="page"{% endif %}>Processamento dos PDFs</a>{% if user.is_superuser %}<a href="{% url 'panel_audit' %}" {% if '/painel/auditoria/' in request.path %}aria-current="page"{% endif %}>Auditoria</a>{% endif %}<p class="note">{{ user.get_full_name|default:user.username }}<br>{% if user.is_superuser %}Administrador principal{% elif user.is_staff %}Administrador{% else %}Gestor de categoria{% endif %}</p>
+</aside><section class="panel-content">{% block panel_content %}{% endblock %}</section></div>
+{% endblock %}
+

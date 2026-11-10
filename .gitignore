@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+var/
+staticfiles/
+tools/
+backups/
+*.log
+*.pem
+*.key
+static/vendor/pdf.mjs
+static/vendor/pdf.worker.mjs
+*.tmp

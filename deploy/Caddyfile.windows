@@ -1,0 +1,7 @@
+# Para compartilhar pela rede, substitua o domínio e configure DNS/portas/certificados.
+conhecimento.empresa.com {
+	reverse_proxy 127.0.0.1:8000
+	request_body {
+		max_size 52MB
+	}
+}

@@ -1,0 +1,5 @@
+{% extends 'panel/base.html' %}{% block panel_content %}
+<div class="panel-stats"><a href="{% url 'panel_articles' %}"><strong>{{ total }}</strong>Artigos acessíveis</a><a href="{% url 'panel_articles' %}?status=draft"><strong>{{ drafts }}</strong>Em rascunho</a><a href="{% url 'panel_articles' %}?revisao=vencida"><strong>{{ overdue }}</strong>Revisões vencidas</a></div>
+<div class="section-title"><h2>Últimas atualizações</h2><a href="{% url 'panel_articles' %}">Ver artigos →</a></div>
+{% for a in recent %}<a class="article-row" href="{% url 'article' a.pk %}"><div><p class="eyebrow">{{ a.category }} · {{ a.get_status_display }}</p><h3>{{ a.title }}</h3><small>{{ a.updated_at|date:'d/m/Y H:i' }}</small></div><span class="arrow">↗</span></a>{% empty %}<div class="empty"><h3>Seu acervo começa aqui.</h3><p>Cadastre categorias e grupos, defina os acessos e envie o primeiro PDF.</p><a href="{% url 'panel_categories' %}">Organizar categorias →</a></div>{% endfor %}
+{% endblock %}

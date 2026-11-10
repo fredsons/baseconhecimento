@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h1>Saúde do acervo</h1><h2>Revisões vencidas</h2>{% for a in overdue %}<p><a href="{% url 'article' a.pk %}">{{ a.title }}</a> · {{ a.review_at }}</p>{% empty %}<p>Nenhuma revisão vencida.</p>{% endfor %}<h2>Uso e feedback</h2><pre style="white-space:pre-wrap">{{ metrics }}</pre>{% endblock %}

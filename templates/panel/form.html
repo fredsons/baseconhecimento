@@ -1,0 +1,1 @@
+{% extends 'panel/base.html' %}{% block panel_content %}<a href="{% url back %}">← Voltar</a><h2 class="mt-4">{{ title }}</h2><form class="editor" method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Salvar</button></form>{% endblock %}

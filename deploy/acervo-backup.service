@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup diario Acervo
+[Service]
+Type=oneshot
+User=acervo
+WorkingDirectory=/opt/acervo
+EnvironmentFile=/etc/acervo.env
+ExecStart=/opt/acervo/.venv/bin/python manage.py backup /srv/backups/acervo
+UMask=0077
