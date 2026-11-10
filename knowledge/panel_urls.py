@@ -1,7 +1,9 @@
 from django.urls import path
 from . import panel
+from . import deletions
 
 urlpatterns=[
+    path('excluir/<str:kind>/<int:pk>/',deletions.delete,name='panel_delete'),
     path('processamento/',panel.processing,name='panel_processing'),
     path('processamento/<int:pk>/repetir/',panel.retry_processing,name='panel_retry'),
     path('auditoria/',panel.audit,name='panel_audit'),

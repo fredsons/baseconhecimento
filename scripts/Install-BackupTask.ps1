@@ -13,7 +13,7 @@ try { $existing=Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyConti
 catch { throw 'Este terminal não conseguiu acessar o Agendador de Tarefas do Windows. Execute este script no seu PowerShell fora do aplicativo.' }
 if ($existing) { throw "A tarefa $TaskName já existe; não foi substituída." }
 $runner=Join-Path $PSScriptRoot 'Run-Acervo.ps1'
-$arguments='-NoProfile -NonInteractive -WindowStyle Hidden -File "{0}" -Mode backup -PythonPath "{1}" -BackupDirectory "{2}"' -f $runner,$PythonPath,$BackupDirectory
+$arguments='-NoProfile -NonInteractive -ExecutionPolicy RemoteSigned -WindowStyle Hidden -File "{0}" -Mode backup -PythonPath "{1}" -BackupDirectory "{2}"' -f $runner,$PythonPath,$BackupDirectory
 $action=New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $arguments -WorkingDirectory $projectPath
 $trigger=New-ScheduledTaskTrigger -Daily -At '02:00'
 $options=New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 2)

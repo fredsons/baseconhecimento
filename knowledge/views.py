@@ -14,6 +14,7 @@ from .search import search,index
 from .forms import ArticleForm,ReplacementForm,RuleForm
 from .uploads import attach
 from .audit import record
+from django.contrib import messages
 @login_required
 def category_rules(request,pk):
  from django.forms import modelformset_factory
@@ -115,6 +116,7 @@ def upload(request):
    with transaction.atomic():
     form.save_m2m();a.refresh_from_db();index(a)
    record(request.user,'upload',a)
+   messages.success(request,'Artigo enviado. O PDF está na fila de processamento.')
    return redirect('article',pk=a.pk) if visible(request.user).filter(pk=a.pk).exists() else redirect('home')
   except ValidationError as e: form.add_error('pdf',e)
  return render(request,'form.html',{'form':form,'title':'Enviar artigo'})
@@ -133,7 +135,7 @@ def edit(request,pk):
     a.save(update_fields=['title','description','review_at','updated_at'])
    with transaction.atomic():
     form.save_m2m();a.refresh_from_db();index(a)
-   record(request.user,'edit',a); return redirect('article',pk=pk)
+   record(request.user,'edit',a);messages.success(request,'Artigo salvo. O histórico das versões foi preservado.');return redirect('article',pk=pk)
   except ValidationError as e: form.add_error('pdf',e)
  return render(request,'form.html',{'form':form,'title':'Editar artigo e substituir PDF'})
 @login_required
@@ -143,12 +145,15 @@ def transition(request,pk,action):
  if action not in ['publish','archive'] or not allowed(request.user,a,action): raise PermissionDenied
  a.status='published' if action=='publish' else 'archived'
  if action=='publish': a.published_at=timezone.now()
- a.save(update_fields=['status','published_at','updated_at']); record(request.user,action,a); return redirect('article',pk=pk)
+ a.save(update_fields=['status','published_at','updated_at']); record(request.user,action,a)
+ messages.success(request,'Artigo publicado.' if action=='publish' else 'Artigo arquivado.')
+ return redirect('article',pk=pk)
 @login_required
 @require_POST
 def feedback(request,pk):
  a=get_object_or_404(visible(request.user),pk=pk)
  Feedback.objects.update_or_create(article=a,user=request.user,defaults={'helpful':request.POST.get('helpful')=='yes'})
+ messages.success(request,'Obrigado. Sua avaliação foi registrada.')
  return redirect('article',pk=pk)
 @login_required
 def effective(request,pk):

@@ -13,7 +13,7 @@ foreach ($mode in @('web','worker')) {
     $name='Acervo-'+$mode
     if (Get-ScheduledTask -TaskName $name -ErrorAction SilentlyContinue) { throw "A tarefa $name já existe; não foi substituída." }
     $runner=Join-Path $PSScriptRoot 'Run-Acervo.ps1'
-    $arguments='-NoProfile -NonInteractive -WindowStyle Hidden -File "{0}" -Mode {1} -PythonPath "{2}"' -f $runner,$mode,$PythonPath
+    $arguments='-NoProfile -NonInteractive -ExecutionPolicy RemoteSigned -WindowStyle Hidden -File "{0}" -Mode {1} -PythonPath "{2}"' -f $runner,$mode,$PythonPath
     $action=New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $arguments -WorkingDirectory $projectPath
     Register-ScheduledTask -TaskName $name -Action $action -Trigger $trigger -Settings $options -Principal $principal | Select-Object TaskName,State
 }

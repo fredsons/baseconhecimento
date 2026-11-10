@@ -38,6 +38,7 @@ def context(user):
         'can_groups': user.has_perm('auth.view_group'),
         'can_tags': user.has_perm('knowledge.view_tag'),
         'can_add_category': user.has_perm('knowledge.add_category'),
+        'processing_failures': visible(user).filter(indexing='error',pk__in=visible(user,'edit').values('pk')).count(),
     }
 
 
@@ -106,6 +107,7 @@ def audit(request):
     people=dict(User.objects.filter(pk__in=[r.get('user') for r in rows]).values_list('pk','username'))
     titles=dict(Article.objects.filter(pk__in=[r.get('article') for r in rows if r.get('article')]).values_list('pk','title'))
     labels={'view':'Abriu artigo','pdf':'Visualizou PDF','download':'Baixou PDF','upload':'Enviou artigo','edit':'Editou artigo','publish':'Publicou artigo','archive':'Arquivou artigo','permissions':'Alterou permissões do artigo','category_permissions':'Alterou permissões da categoria','user_change':'Alterou usuário','group_change':'Alterou grupo','retry_processing':'Solicitou nova extração'}
+    labels['delete']='Excluiu registro'
     from django.utils.dateparse import parse_datetime
     items=[]
     for row in reversed(rows):
@@ -189,6 +191,7 @@ def user_edit(request,pk=None):
     # Contas e grupos controlam privilégios: somente superusuários os alteram.
     if not request.user.is_superuser: raise PermissionDenied
     obj=get_object_or_404(User,pk=pk) if pk else None
+    was_active=bool(obj and obj.is_active)
     form=PersonForm(request.POST or None,instance=obj) if pk else NewUserForm(request.POST or None)
     if request.method=='POST' and form.is_valid():
         if obj and obj.pk==request.user.pk and (not form.cleaned_data['is_active'] or not form.cleaned_data['is_staff']):
@@ -196,7 +199,7 @@ def user_edit(request,pk=None):
         else:
             obj=form.save(); record(request.user,'user_change',target_user=obj.pk)
             messages.success(request,'Usuário salvo.'); return redirect('panel_users')
-    return page(request,'form.html',form=form,title='Editar usuário' if pk else 'Novo usuário',back='panel_users')
+    return page(request,'form.html',form=form,title='Editar usuário' if pk else 'Novo usuário',back='panel_users',confirm_deactivate=was_active)
 
 
 class PermissionChoice(forms.ModelMultipleChoiceField):

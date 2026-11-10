@@ -96,7 +96,7 @@ Para cadastrar uma tarefa diária às 02h, execute no seu PowerShell:
 
 O script não substitui tarefa existente. Usa a sessão do usuário Windows e executa assim que possível se o horário foi perdido; o computador precisa estar ligado e o usuário conectado. Para operação sem login, configure uma conta de serviço no Agendador com as credenciais e permissões da organização.
 
-Opcionalmente, `Install-StartupTasks.ps1` cadastra inicialização de web e worker ao entrar no Windows. Os scripts foram preparados, mas o aplicativo de assistência não conseguiu acessar o serviço CIM do Agendador nesta estação. O agendamento **não está ativado** por essa sessão. Rode o instalador no seu próprio terminal e confirme a tarefa no Agendador. O backup manual e o teste de restauração já foram executados com sucesso.
+Opcionalmente, `Install-StartupTasks.ps1` cadastra inicialização de web e worker ao entrar no Windows. Nesta instalação, o usuário já cadastrou a tarefa Acervo-Backup e confirmou uma execução com LastTaskResult=0 em 10/11/2026. O aplicativo de assistência continua sem acesso ao serviço CIM; o cadastro foi feito pelo usuário no seu PowerShell. Para o bloqueio padrão de scripts, use powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File ".\scripts\Install-BackupTask.ps1"; a política vale só para o processo, e a tarefa gerada utiliza a mesma configuração.
 
 ## Restauração
 
@@ -139,3 +139,20 @@ O usuário desta instalação utiliza Windows. Os arquivos systemd/Nginx em `dep
 O repositório original continha somente README. O histórico inicial foi preservado; a implementação inclui migrações, testes, scripts Windows, exemplos Linux e documentação. Arquivos privados, ambientes Python, ferramentas binárias e backups são ignorados pelo Git.
 
 FTS5 fica isolado em `knowledge/search.py` e sua migração; uma futura mudança para PostgreSQL precisa substituir esse módulo e a configuração SQLite. O restante utiliza ORM. Consulte `CLAUDE.md`, `DESIGN_SYSTEM.md` e `THIRD_PARTY.md`.
+
+
+## Alertas, confirmações e exclusões
+
+O tema monocromático agora inclui mensagens identificadas de sucesso, informação, atenção e erro, com fechamento por teclado. Formulários inválidos preservam os campos e mostram o que precisa ser corrigido. Alterações não salvas geram aviso ao navegar ou fechar a página.
+
+Publicar, arquivar, substituir PDF, desativar usuário e salvar mudanças de permissões pedem confirmação no navegador. A janela identifica o registro; remoções de regras identificam o grupo e a ação afetados. Cancelar ou Escape não envia o formulário. A navegação por teclado fica restrita à janela enquanto ela está aberta. Sem JavaScript, as autorizações e validações do servidor continuam obrigatórias.
+
+As exclusões ficam em uma página de revisão com nome e consequências, confirmação explícita e token assinado válido por dez minutos, vinculado ao registro e ao administrador. O servidor confere novamente permissão, estado e dependências no POST. GET nunca exclui. Registros alterados desde a revisão exigem nova confirmação.
+
+- Artigos: exclusão exclusiva do administrador principal, após arquivamento e fora do processamento. Remove registros, regras, avaliações e versões do artigo. Arquivos privados permanecem retidos conforme a política de backup, sem acesso pela biblioteca; não é uma rotina de eliminação física de dados.
+- Categorias: não podem ter artigos, subcategorias, regras ou delegações de gestão vinculadas.
+- Grupos: não podem ter integrantes, regras, delegações ou funções administrativas vinculadas. Apenas o administrador principal pode excluí-los.
+- Tags: não podem estar em uso. Categoria e tag exigem a permissão administrativa específica de exclusão.
+- Pessoas: continuam sendo desativadas; não há exclusão física de contas pelo painel, preservando autoria e histórico.
+
+Falhas de processamento aparecem no painel apenas para quem pode visualizar e editar os artigos afetados, com acesso à tela de nova tentativa.

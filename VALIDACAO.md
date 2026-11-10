@@ -2,7 +2,7 @@
 
 ## Executado com sucesso
 
-- 65 testes automatizados com ferramentas externas habilitadas, sem testes pulados: permissões, publicação, ausência de vazamentos na busca/listagens, arquivos privados, intervalos HTTP, expiração, CSRF, bloqueio de login, versões, falha de fila, edições concorrentes, gestão delegada e painel.
+- 82 testes automatizados com ferramentas externas habilitadas, sem testes pulados: permissões, publicação, ausência de vazamentos na busca/listagens, arquivos privados, intervalos HTTP, expiração, CSRF, bloqueio de login, versões, falha de fila, edições concorrentes, gestão delegada e painel.
 - Poppler real: extração e busca de texto conhecido em PDF textual.
 - OCRmyPDF 17.14.1 + Tesseract 5.4: OCR em PDF escaneado e em PDF misto, preservando o texto da página digital.
 - ClamAV 1.4.6: PDF limpo aceito e PDF com marcador inofensivo correspondente a uma assinatura de teste rejeitado; versão anterior preservada. Isso não substitui atualização das assinaturas de produção.
@@ -16,7 +16,7 @@
 
 ## Pendências de ativação no computador
 
-- O aplicativo não conseguiu acessar o recurso CIM do Agendador de Tarefas. A tarefa diária não foi cadastrada. Executar scripts/Install-BackupTask.ps1 no PowerShell do usuário e confirmar no Agendador. O backup manual foi testado e funciona.
+- Backup diário ativado pelo usuário nesta estação e execução confirmada com LastTaskResult=0. O acesso CIM continua indisponível para o aplicativo de assistência; isso não impede a tarefa cadastrada pelo usuário.
 - Não há domínio/certificado de produção informado. O teste HTTPS utilizou um certificado temporário de laboratório; publicação HTTPS para outras pessoas depende dessa configuração. Uso local continua em 127.0.0.1.
 - ClamAV é opcional e permanece desativado por padrão. Atualizar assinaturas reais antes de ativá-lo na instalação.
 
@@ -25,3 +25,5 @@ As pendências acima não são apresentadas como configurações já ativadas. O
 - Preparação do PDF.js com hashes fixados: arquivos locais conferidos; testes rejeitam download adulterado e impedem download no modo de verificação.
 
 
+
+- Alertas e confirmações: 17 novos testes de exclusão/CSRF/permissões/dependências/token/expiração/estado alterado, além da suíte existente. Navegador: Cancelar, Escape, retenção do formulário, restauração do estado inicial e modal responsivo. Remoção de regra testada em página fictícia sem banco ou envio, sem alterar acessos reais.
